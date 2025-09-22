@@ -16,29 +16,33 @@ class PlayerStats:
         return cls(data.get('gold', 0), data.get('gpc', 1), data.get('cps', 0))
 
 class GpcUpgrade:
-    def __init__(self, price=10):
+    # mga fix: Lower initial price for GPC upgrade, ky mahal ra kaayo sa akong 1st try
+    def __init__(self, price=8): # changed from 10 to 8
         self.price = price
-        self.base_price = 10 # For reset
+        self.base_price = 8 # for reset (match initial price)
 
     def to_dict(self):
         return {'price': self.price}
 
     @classmethod
     def from_dict(cls, data):
-        return cls(data.get('price', 10))
+        return cls(data.get('price', 8)) # changed from 10 to 8
 
     def calculate_new_price(self):
-        return int(self.price * 1.5) # Price increase logic
+        # additional an akong g fix: slower GPC upgrade price increase
+        return int(self.price * 1.4) # changed from 1.5 to 1.4
 
     def reset(self):
         self.price = self.base_price
 
 class CpsUpgrade:
-    def __init__(self, price=100, amount_per_buy=1):
+    # logic an g fix: lower initial price and higher initial amount for CPS upgrade
+    # SUGGESTION: Further adjust initial price and amount per buy to feel more impactful
+    def __init__(self, price=60, amount_per_buy=5): # price from 75 to 60, amount from 2 to 5
         self.price = price
         self.amount_per_buy = amount_per_buy
-        self.base_price = 100 # For reset
-        self.base_amount_per_buy = 1 # For reset
+        self.base_price = 60 # for reset (match initial price), pra fair agg pag both amount ugg price
+        self.base_amount_per_buy = 5 # for reset (match initial amount)
 
     def to_dict(self):
         return {
@@ -48,19 +52,19 @@ class CpsUpgrade:
 
     @classmethod
     def from_dict(cls, data):
-        return cls(data.get('price', 100), data.get('amount_per_buy', 1))
+        return cls(data.get('price', 60), data.get('amount_per_buy', 5)) # Match init
 
     def calculate_new_price(self):
-        return int(self.price * 1.8) # Price increase logic
-
-
+        # na bag-o: slower CPS upgrade price increase
+        # SUGGESTION: Slightly slower price increase for CPS to make it more affordable longer
+        return int(self.price * 1.5) # Changed from 1.6 to 1.5 (or even 1.4 for very slow)
 
     def reset(self):
         self.price = self.base_price
         self.amount_per_buy = self.base_amount_per_buy
 
 
-class CookieClickerGame: # This class now orchestrates the others
+class CookieClickerGame: # this class now "orchestrates" the others (eyy fancy word HAHAHA)
     SESSION_KEY = 'cookie_clicker_game_state'
 
     def __init__(self, session):
@@ -73,7 +77,7 @@ class CookieClickerGame: # This class now orchestrates the others
         self.gpc_upgrade = GpcUpgrade.from_dict(state_data.get('gpc_upgrade', {}))
         self.cps_upgrade = CpsUpgrade.from_dict(state_data.get('cps_upgrade', {}))
 
-        # Ensure session is always marked modified after init, tali
+        # ensure session is always marked modified after init
         self.session.modified = True
 
     def _save_game_state(self):
@@ -85,7 +89,7 @@ class CookieClickerGame: # This class now orchestrates the others
         self.session.modified = True
 
     def get_state(self):
-        # ako g combine agg tanan states for template/JSON response
+        # g-usa agg all states for template/JSON response
         state = self.player_stats.to_dict()
         state['upgrade_gpc_price'] = self.gpc_upgrade.price
         state['buy_cps_price'] = self.cps_upgrade.price
@@ -100,12 +104,17 @@ class CookieClickerGame: # This class now orchestrates the others
     def upgrade_gpc(self):
         if self.player_stats.gold >= self.gpc_upgrade.price:
             self.player_stats.gold -= self.gpc_upgrade.price
-            self.player_stats.gpc += 1 # Increment GPC
+
+            # akong conclusion?: more significant GPC increment
+            increment_amount = max(3, int(self.player_stats.gpc * 0.25)) # pra fair sa pricing
+            self.player_stats.gpc = int(self.player_stats.gpc + increment_amount) # ensure na int sya
+
             self.gpc_upgrade.price = self.gpc_upgrade.calculate_new_price()
             self._save_game_state()
             return self.get_state()
         raise ValueError("Not enough gold to upgrade GPC")
 
+    
     def buy_autoclicker(self):
         if self.player_stats.gold >= self.cps_upgrade.price:
             self.player_stats.gold -= self.cps_upgrade.price
@@ -115,14 +124,16 @@ class CookieClickerGame: # This class now orchestrates the others
             return self.get_state()
         raise ValueError("Not enough gold to buy auto-clicker")
 
+    
     def auto_generate_gold(self):
         self.player_stats.gold += self.player_stats.cps
         self._save_game_state()
         return self.get_state()
 
+   
     def reset(self):
-        self.player_stats = PlayerStats() 
-        self.gpc_upgrade = GpcUpgrade()   
-        self.cps_upgrade = CpsUpgrade()  
+        self.player_stats = PlayerStats()
+        self.gpc_upgrade = GpcUpgrade()
+        self.cps_upgrade = CpsUpgrade()
         self._save_game_state()
         return self.get_state()
