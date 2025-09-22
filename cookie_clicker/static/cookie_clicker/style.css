@@ -1,0 +1,97 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    background-color: #333; /* Dark background */
+    color: #eee; /* Light text */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.game-container {
+    max-width: 700px;
+    width: 90%;
+    margin: 20px auto;
+    padding: 30px;
+    border: 1px solid #555;
+    border-radius: 15px;
+    background-color: #444;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+}
+
+h1 {
+    color: #f0c040; /* Golden yellow for title */
+    margin-bottom: 25px;
+    font-size: 2.5em;
+}
+
+.gold-display, .info {
+    font-size: 2.2em;
+    margin-bottom: 15px;
+    color: #fff;
+}
+
+.gold-display span, .info span {
+    font-weight: bold;
+    color: #f0e68c; /* Lighter golden for values */
+}
+
+#cookie-button {
+    font-size: 180px; /* Larger cookie */
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.1s ease, filter 0.1s ease;
+    padding: 0;
+    margin: 20px 0;
+    line-height: 1;
+}
+
+#cookie-button:active {
+    transform: scale(0.95);
+    filter: brightness(0.8);
+}
+
+.upgrades, .auto-clicker-section {
+    margin-top: 30px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+}
+
+.upgrade-button, .buy-auto-clicker-button, .reset-button {
+    padding: 15px 30px;
+    font-size: 1.1em;
+    cursor: pointer;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    min-width: 250px;
+}
+
+.upgrade-button { background-color: #4CAF50; } /* Green */
+.upgrade-button:hover { background-color: #45a049; transform: translateY(-2px); }
+.upgrade-button:disabled { background-color: #777; cursor: not-allowed; }
+
+.buy-auto-clicker-button { background-color: #008CBA; } /* Blue */
+.buy-auto-clicker-button:hover { background-color: #007bb5; transform: translateY(-2px); }
+.buy-auto-clicker-button:disabled { background-color: #777; cursor: not-allowed; }
+
+.reset-button { background-color: #f44336; margin-top: 20px; } /* Red */
+.reset-button:hover { background-color: #da190b; transform: translateY(-2px); }
+
+.button-form { display: inline-block; } /* Ensures buttons stay inline if forms are used */
+
+@media (max-width: 768px) {
+    h1 { font-size: 2em; }
+    .gold-display, .info { font-size: 1.8em; }
+    #cookie-button { font-size: 150px; }
+    .upgrade-button, .buy-auto-clicker-button, .reset-button { min-width: unset; width: 90%; }
+}
