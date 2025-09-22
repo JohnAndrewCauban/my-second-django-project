@@ -1,0 +1,33 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Django Cookie Clicker</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; margin-top: 50px; background-color: #282c34; color: white; }
+        button { padding: 10px 20px; font-size: 18px; cursor: pointer; margin: 10px; }
+        #cookie { font-size: 150px; background: none; border: none; cursor: pointer; }
+        .gold-display, .info { font-size: 24px; margin-bottom: 20px; }
+        .upgrades { margin-top: 30px; }
+        .upgrade-button { background-color: #4CAF50; color: white; border: none; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <h1>Django Cookie Clicker</h1>
+    <div class="gold-display">Gold: <span id="gold-count">{{ gold }}</span></div>
+    <div class="info">Gold Per Click: <span id="gpc-count">{{ gpc }}</span></div>
+
+    <button id="cookie">🍪</button>
+
+    <div class="upgrades">
+        <button id="upgrade-gpc" class="upgrade-button">Upgrade GPC (Cost: <span id="upgrade-price">{{ upgrade_price }}</span> Gold)</button>
+        
+    </div>
+
+    <script>
+        console.log("Cookie Clicker Frontend Loaded!");
+    </script>
+</body>
+</html>
